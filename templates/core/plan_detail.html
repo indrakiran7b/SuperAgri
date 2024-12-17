@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Crop Plan Details</h1>
+    
+    <!-- Phases Section -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+        <h2 class="text-2xl font-bold mb-4">Growth Phases</h2>
+        <div class="space-y-6">
+            {% for phase in plan.daily_plan.phases %}
+            <div class="border-l-4 border-green-500 pl-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-lg font-semibold">{{ phase.name }}</h3>
+                        <p class="text-sm text-gray-600">Duration: {{ phase.duration }}</p>
+                    </div>
+                </div>
+                <ul class="mt-3 space-y-2">
+                    {% for task in phase.tasks %}
+                    <li class="flex items-start">
+                        <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>{{ task }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Schedules Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Irrigation Schedule -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4">Irrigation Schedule</h2>
+            <div class="space-y-3">
+                <div>
+                    <p class="font-semibold">Frequency:</p>
+                    <p class="text-gray-700">{{ plan.daily_plan.irrigation_schedule.frequency }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Amount:</p>
+                    <p class="text-gray-700">{{ plan.daily_plan.irrigation_schedule.amount }}</p>
+                </div>
+                {% if plan.daily_plan.irrigation_schedule.notes %}
+                <div>
+                    <p class="font-semibold">Notes:</p>
+                    <ul class="list-disc list-inside text-gray-700">
+                        {% for note in plan.daily_plan.irrigation_schedule.notes %}
+                        <li>{{ note }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Fertilizer Schedule -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-xl font-bold mb-4">Fertilizer Schedule</h2>
+            <div class="space-y-4">
+                {% for schedule in plan.daily_plan.fertilizer_schedule %}
+                <div class="border-b pb-3 last:border-b-0 last:pb-0">
+                    <p class="font-semibold">{{ schedule.timing }}</p>
+                    <p class="text-gray-700">Type: {{ schedule.type }}</p>
+                    <p class="text-gray-700">Amount: {{ schedule.amount }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Monitoring Points -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+        <h2 class="text-xl font-bold mb-4">Monitoring Points</h2>
+        <ul class="space-y-2">
+            {% for point in plan.daily_plan.monitoring_points %}
+            <li class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                {{ point }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Pesticide Recommendations Button -->
+    <div class="flex justify-end mt-6">
+        <a href="{% url 'core:generate_pesticide_recommendations' plan.id %}" 
+           class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"></path>
+            </svg>
+            Generate Pesticide Recommendations
+        </a>
+    </div>
+
+    <!-- Add this section to your plan_detail.html template -->
+{% if plan.pesticides %}
+<div class="bg-white shadow rounded-lg p-6 mb-6">
+    <h2 class="text-xl font-bold mb-4">Pesticide Recommendations</h2>
+    
+    <!-- Specific Recommendations -->
+    <div class="space-y-6">
+        {% for rec in plan.pesticides.recommendations %}
+        <div class="border-l-4 border-yellow-500 pl-4">
+            <h3 class="font-semibold text-lg">{{ rec.name }}</h3>
+            <div class="mt-2 space-y-2">
+                <p><span class="font-medium">Target:</span> {{ rec.target }}</p>
+                <p><span class="font-medium">Application:</span> {{ rec.application }}</p>
+                {% if rec.safety_precautions %}
+                <div>
+                    <p class="font-medium">Safety Precautions:</p>
+                    <ul class="list-disc list-inside ml-4 text-gray-700">
+                        {% for precaution in rec.safety_precautions %}
+                        <li>{{ precaution }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- General Guidelines -->
+    {% if plan.pesticides.general_guidelines %}
+    <div class="mt-6">
+        <h3 class="font-semibold text-lg mb-3">General Guidelines</h3>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+            {% for guideline in plan.pesticides.general_guidelines %}
+            <li>{{ guideline }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <!-- Emergency Contacts -->
+    {% if plan.pesticides.emergency_contacts %}
+    <div class="mt-6 bg-gray-50 rounded-lg p-4">
+        <h3 class="font-semibold text-lg mb-3">Emergency Contacts</h3>
+        <ul class="space-y-2 text-gray-700">
+            {% for contact in plan.pesticides.emergency_contacts %}
+            <li class="flex items-center">
+                <svg class="h-5 w-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+                {{ contact }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+</div>
+{% endblock %}

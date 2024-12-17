@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agriculture System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-green-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'core:farm_details' %}" class="text-2xl font-bold">SmartAgri</a>
+            {% if user.is_authenticated %}
+                <div class="space-x-4">
+                    <a href="{% url 'core:farm_details' %}" class="hover:text-green-200">My Farm</a>
+                    <a href="{% url 'core:crop_plan' %}" class="hover:text-green-200">Crop Plans</a>
+                    <a href="{% url 'core:monitoring_dashboard' %}" class="hover:text-green-200">Monitoring</a>
+                    <a href="{% url 'logout' %}" class="hover:text-green-200">Logout</a>
+                </div>
+            {% else %}
+                <div class="space-x-4">
+                    <a href="{% url 'login' %}" class="hover:text-green-200">Login</a>
+                    <a href="{% url 'register' %}" class="hover:text-green-200">Register</a>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

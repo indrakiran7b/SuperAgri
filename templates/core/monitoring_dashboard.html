@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Monitoring Dashboard</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Upcoming Tasks -->
+        <div class="bg-white shadow-md rounded p-6">
+            <h2 class="text-xl font-bold mb-4">Upcoming Tasks</h2>
+            
+            {% if schedules %}
+                <div class="space-y-4">
+                    {% for task in schedules %}
+                        <div class="border-l-4 {% if task.completed %}border-green-500{% else %}border-yellow-500{% endif %} p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-semibold">{{ task.date|date:"M d, Y" }}</p>
+                                    <p class="text-gray-600">{{ task.task_type }}</p>
+                                    <p class="mt-2">{{ task.description }}</p>
+                                </div>
+                                
+                                {% if not task.completed %}
+                                    <form method="post" action="{% url 'complete_task' task.id %}" class="ml-4">
+                                        {% csrf_token %}
+                                        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded text-sm">
+                                            Complete
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                            
+                            {% if task.notes %}
+                                <div class="mt-2 text-sm text-gray-600">
+                                    <p><strong>Notes:</strong> {{ task.notes }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-600">No upcoming tasks scheduled.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Pest Alerts -->
+        <div class="bg-white shadow-md rounded p-6">
+            <h2 class="text-xl font-bold mb-4">Pest Alerts</h2>
+            
+            {% if pest_alerts %}
+                <div class="space-y-4">
+                    {% for alert in pest_alerts %}
+                        <div class="border-l-4 border-red-500 p-4">
+                            <p class="font-semibold">{{ alert.pest_name }}</p>
+                            <p class="text-sm text-red-600">Risk Level: {{ alert.risk_level }}</p>
+                            <p class="mt-2">{{ alert.description }}</p>
+                            <div class="mt-2 bg-gray-50 p-2 rounded">
+                                <p class="text-sm font-semibold">Recommended Action:</p>
+                                <p class="text-sm">{{ alert.recommended_action }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-600">No active pest alerts.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

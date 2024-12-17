@@ -1,0 +1,235 @@
+{% extends 'base.html' %} {% block content %}
+<div class="max-w-4xl mx-auto py-8 px-4">
+  <!-- Header Section -->
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">
+      Farm Analysis & Recommendations
+    </h1>
+    <p class="mt-2 text-lg text-gray-600">
+      Get personalized crop recommendations based on your farm details
+    </p>
+  </div>
+
+  <!-- Farm Details Card -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <h2 class="text-xl font-bold text-green-700 mb-4">Farm Details</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex items-start space-x-3">
+        <svg
+          class="h-6 w-6 text-green-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+          />
+        </svg>
+        <div>
+          <p class="font-medium text-gray-700">Location</p>
+          <p class="text-gray-600">{{ farm.location }}</p>
+        </div>
+      </div>
+      <div class="flex items-start space-x-3">
+        <svg
+          class="h-6 w-6 text-green-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+          />
+        </svg>
+        <div>
+          <p class="font-medium text-gray-700">Total Area</p>
+          <p class="text-gray-600">{{ farm.total_area }} acres</p>
+        </div>
+      </div>
+      <div class="flex items-start space-x-3">
+        <svg
+          class="h-6 w-6 text-green-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
+          />
+        </svg>
+        <div>
+          <p class="font-medium text-gray-700">Soil Type</p>
+          <p class="text-gray-600">{{ farm.soil_type }}</p>
+        </div>
+      </div>
+      <div class="flex items-start space-x-3">
+        <svg
+          class="h-6 w-6 text-green-500"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+          />
+        </svg>
+        <div>
+          <p class="font-medium text-gray-700">Previous Crop</p>
+          <p class="text-gray-600">{{ farm.previous_crop }}</p>
+        </div>
+      </div>
+    </div>
+
+    {% if not recommendation %}
+    <div class="mt-6 flex justify-center">
+      <a
+        href="{% url 'core:generate_recommendations' %}"
+        class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200"
+      >
+        <svg
+          class="h-5 w-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+          />
+        </svg>
+        Generate Crop Recommendations
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if recommendation %}
+  <!-- Recommendations Section -->
+  <div class="space-y-6">
+    <!-- Climate Analysis -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center mb-4">
+        <svg
+          class="h-6 w-6 text-green-500 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+          />
+        </svg>
+        <h2 class="text-xl font-bold text-green-700">Climate Analysis</h2>
+      </div>
+      <div class="prose max-w-none text-gray-600">
+        {{ recommendation.climate_description|linebreaks }}
+      </div>
+    </div>
+
+    <!-- Soil Analysis -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center mb-4">
+        <svg
+          class="h-6 w-6 text-green-500 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4"
+          />
+        </svg>
+        <h2 class="text-xl font-bold text-green-700">Soil Analysis</h2>
+      </div>
+      <div class="prose max-w-none text-gray-600">
+        {{ recommendation.soil_description|linebreaks }}
+      </div>
+    </div>
+
+    <!-- Previous Crop Impact -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center mb-4">
+        <svg
+          class="h-6 w-6 text-green-500 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          />
+        </svg>
+        <h2 class="text-xl font-bold text-green-700">Previous Crop Impact</h2>
+      </div>
+      <div class="prose max-w-none text-gray-600">
+        {{ recommendation.previous_crop_impact|linebreaks }}
+      </div>
+    </div>
+
+    <!-- Water Analysis -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center mb-4">
+        <svg
+          class="h-6 w-6 text-green-500 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+          />
+        </svg>
+        <h2 class="text-xl font-bold text-green-700">
+          Water Availability Analysis
+        </h2>
+      </div>
+      <div class="prose max-w-none text-gray-600">
+        {{ recommendation.water_analysis|linebreaks }}
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-8 flex justify-end space-x-4">
+      <a
+        href="{% url 'core:generate_recommendations' %}"
+        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+      >
+        Regenerate Recommendations
+      </a>
+      <a
+        href="{% url 'core:crop_plan' %}"
+        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+      >
+        Create Crop Plan
+      </a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

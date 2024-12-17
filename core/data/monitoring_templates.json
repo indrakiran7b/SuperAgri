@@ -1,0 +1,54 @@
+{
+    "default": {
+        "stages": [
+            {
+                "name": "Initial Growth",
+                "duration": 30,
+                "tasks": [
+                    {
+                        "type": "irrigation",
+                        "interval": 3,
+                        "description": "Check soil moisture and irrigate {crop} seedlings if needed"
+                    },
+                    {
+                        "type": "pest_check",
+                        "interval": 7,
+                        "description": "Inspect {crop} plants for common pests and diseases"
+                    }
+                ]
+            },
+            {
+                "name": "Vegetative Growth",
+                "duration": 30,
+                "tasks": [
+                    {
+                        "type": "fertilization",
+                        "interval": 14,
+                        "description": "Apply recommended fertilizer for {crop} during {stage}"
+                    },
+                    {
+                        "type": "weed_control",
+                        "interval": 10,
+                        "description": "Remove weeds and maintain field cleanliness"
+                    }
+                ]
+            },
+            {
+                "name": "Flowering/Fruiting",
+                "duration": 30,
+                "tasks": [
+                    {
+                        "type": "pest_check",
+                        "interval": 5,
+                        "description": "Monitor {crop} for pests and diseases during critical {stage} stage"
+                    },
+                    {
+                        "type": "irrigation",
+                        "interval": 2,
+                        "description": "Maintain optimal moisture levels for {crop} during {stage}"
+                    }
+                ]
+            }
+        ]
+    }
+}

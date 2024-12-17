@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center min-h-screen">
+    <h1 class="text-4xl font-bold mb-4">500 - Server Error</h1>
+    <p class="text-gray-600 mb-4">Something went wrong on our end. Please try again later.</p>
+    <a href="{% url 'home' %}" class="text-green-500 hover:text-green-700">Return to Home</a>
+</div>
+{% endblock %}

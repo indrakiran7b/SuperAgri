@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Create Crop Plan</h1>
+    
+    {% if farm %}
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+        <h2 class="text-lg font-semibold mb-2">Farm Details</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <p class="text-sm text-gray-600">Location</p>
+                <p class="font-medium">{{ farm.location }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Soil Type</p>
+                <p class="font-medium">{{ farm.soil_type|title }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Total Area</p>
+                <p class="font-medium">{{ farm.total_area }} acres</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Previous Crop</p>
+                <p class="font-medium">{{ farm.previous_crop }}</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="bg-white shadow rounded-lg p-6">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="{{ form.crop_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Crop Name
+                </label>
+                {{ form.crop_name }}
+                {% if form.crop_name.errors %}
+                    {% for error in form.crop_name.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+                <p class="mt-1 text-sm text-gray-500">Enter the name of the crop you want to plant</p>
+            </div>
+            
+            <div>
+                <label for="{{ form.planting_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Planting Date
+                </label>
+                {{ form.planting_date }}
+                {% if form.planting_date.errors %}
+                    {% for error in form.planting_date.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+                <p class="mt-1 text-sm text-gray-500">Select the planned date for planting</p>
+            </div>
+
+            {% if error_details %}
+            <div class="rounded-md bg-yellow-50 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">
+                            Unable to generate plan
+                        </h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>The system encountered an error while generating your crop plan. You can:</p>
+                            <ul class="list-disc list-inside mt-2">
+                                <li>Try again in a few minutes</li>
+                                <li>Check if the crop name is spelled correctly</li>
+                                <li>Contact support if the problem persists</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="pt-4">
+                <button type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    Generate Plan
+                </button>
+            </div>
+
+            <div class="pt-4 text-center">
+                <a href="{% url 'core:farm_details' %}" class="text-sm text-green-600 hover:text-green-500">
+                    ← Back to Farm Details
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
